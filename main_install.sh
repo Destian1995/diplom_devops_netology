@@ -23,6 +23,16 @@ terraform output -json external_ip_address_vm_instance_master | jq -r '.[]' > ..
 terraform output -json external_ip_address_vm_instance_jenkins | jq -r '.[]' > ../inv2
 export IP_MASTER=$(terraform output -json external_ip_address_vm_instance_master | jq -r '.[]')
 
+# Установка nerdctl на мастер-ноду
+ssh ubuntu@$IP_MASTER "sudo sh -c 'curl -L https://github.com/containerd/nerdctl/releases/latest/download/nerdctl-$(uname -s)-$(uname -m) > /usr/local/bin/nerdctl'"
+ssh ubuntu@$IP_MASTER "sudo chmod +x /usr/local/bin/nerdctl"
+
+# Установка nerdctl на рабочие ноды
+for worker_ip in $(terraform output -json external_ip_address_vm_instance_worker | jq -r '.[]'); do
+    ssh ubuntu@$worker_ip "sudo sh -c 'curl -L https://github.com/containerd/nerdctl/releases/latest/download/nerdctl-$(uname -s)-$(uname -m) > /usr/local/bin/nerdctl'"
+    ssh ubuntu@$worker_ip "sudo chmod +x /usr/local/bin/nerdctl"
+done
+
 sleep 120
 
 cd ../kubespray
@@ -56,3 +66,4 @@ kubectl create namespace myapp
 helm install prometheus --namespace monitoring prometheus-community/kube-prometheus-stack
 kubectl apply -f ./manifests/grafana-service-nodeport.yaml
 helm install netology ./helm/myapp -n myapp
+

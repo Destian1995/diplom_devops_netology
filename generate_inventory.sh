@@ -2,44 +2,31 @@
 
 set -e
 
-# Функция для генерации секции хостов
-generate_host_section() {
-    local prefix="$1"                   # Префикс имени хоста (например, "master" или "worker")
-    local external_ips="$2"             # Внешние IP-адреса хостов
-    local internal_ips="$3"             # Внутренние IP-адреса хостов
-    local count="$4"                    # Количество хостов данного типа
-
-    for ((num = 1; num <= count; num++)); do
-        printf "%s-%d   ansible_host=%s   ip=%s\n" "$prefix" "$num" \
-            "$(echo "$external_ips" | jq -j ".[$num-1]")" \
-            "$(echo "$internal_ips" | jq -j ".[$num-1]")"
-    done
-}
-
 printf "[all]\n"
 
-# Генерация секции хостов для мастер-узлов
-generate_host_section "master" \
-    "$(terraform output -json external_ip_address_vm_instance_master)" \
-    "$(terraform output -json internal_ip_address_vm_instance_master)" \
-    1
+for num in 1
+do
+printf "master-$num   ansible_host="
+terraform output -json external_ip_address_vm_instance_master | jq -j ".[$num-1]"
+printf "   ip="
+terraform output -json internal_ip_address_vm_instance_master | jq -j ".[$num-1]"
+printf "   etcd_member_name=etcd-$num\n"
+done
 
-# Генерация секции хостов для рабочих узлов
-generate_host_section "worker" \
-    "$(terraform output -json external_ip_address_vm_instance_worker)" \
-    "$(terraform output -json internal_ip_address_vm_instance_worker)" \
-    2
-
-
+for num in 1 2
+do
+printf "worker-$num   ansible_host="
+terraform output -json external_ip_address_vm_instance_worker | jq -j ".[$num-1]"
+printf "   ip="
+terraform output -json internal_ip_address_vm_instance_worker | jq -j ".[$num-1]"
+printf "\n"
+done
 
 printf "\n[all:vars]\n"
 printf "ansible_user=cloud-user\n"
 printf "supplementary_addresses_in_ssl_keys='"
 terraform output -json external_ip_address_vm_instance_master | jq -cj
 printf "'\n\n"
-
-
-
 
 cat << EOF
 [kube_control_plane]
