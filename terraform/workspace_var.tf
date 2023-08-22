@@ -13,7 +13,6 @@
     diplom-prod = 4
   }
   disk_type = {
-    # stage = "network-hdd"
     diplom-stage = "network-ssd"
     diplom-prod = "network-ssd"
   }
