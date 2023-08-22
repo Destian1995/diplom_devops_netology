@@ -11,7 +11,6 @@ resource "yandex_compute_instance" "master" {
   boot_disk {
     initialize_params {
       image_id = "fd8emvfmfoaordspe1jr"
-      # centos"fd8sni054daiudopdnfe"
       type = local.disk_type[terraform.workspace]
       size = local.disk_size[terraform.workspace]
     }
