@@ -24,7 +24,8 @@ if ! command -v pip3.9 &> /dev/null; then
     echo "Pip для Python 3.9 не установлен. Установка..."
     sudo apt-get install -y python3.9-pip
 fi
-python3.9 -m pip install --user ansible-core==2.15.0
+python3.9 -m pip install --user ansible-core==2.12.0
+
 
 # Проверяем и устанавливаем дополнительные утилиты
 if ! command -v jq &> /dev/null; then
