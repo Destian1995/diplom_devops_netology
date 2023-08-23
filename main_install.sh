@@ -4,8 +4,11 @@
 
 set -e
 
-# Скачиваем репозиторий kubespray, для дальнейшего развертывания.
-git clone  https://github.com/kubernetes-sigs/kubespray.git
+# Скачиваем репозиторий kubespray, если его нет, для дальнейшего развертывания.
+if [ ! -d "kubespray" ]; then
+    echo "Репозиторий kubespray не найден. Скачиваем..."
+    git clone https://github.com/kubernetes-sigs/kubespray.git
+fi
 
 # Проверяем и устанавливаем python 3.9
 if ! command -v python3.9 &> /dev/null; then
@@ -51,7 +54,8 @@ cp -rfp kubespray/inventory/sample kubespray/inventory/mycluster
 
 cd terraform
 export WORKSPACE=$(terraform workspace show)
-bash generate_inventory.sh > ../kubespray/inventory/mycluster/hosts.ini
+bash ./generate_inventory.sh > ../kubespray/inventory/mycluster/hosts.ini
+bash generate_inventory.sh
 terraform output -json external_ip_address_vm_instance_master | jq -r '.[]' > ../inv
 terraform output -json external_ip_address_vm_instance_jenkins | jq -r '.[]' > ../inv2
 export IP_MASTER=$(terraform output -json external_ip_address_vm_instance_master | jq -r '.[]')
