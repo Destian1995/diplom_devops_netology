@@ -51,7 +51,7 @@ cp -rfp kubespray/inventory/sample kubespray/inventory/mycluster
 
 cd terraform
 export WORKSPACE=$(terraform workspace show)
-bash ./generate_inventory.sh > ../kubespray/inventory/mycluster/hosts.ini
+bash generate_inventory.sh > ../kubespray/inventory/mycluster/hosts.ini
 terraform output -json external_ip_address_vm_instance_master | jq -r '.[]' > ../inv
 terraform output -json external_ip_address_vm_instance_jenkins | jq -r '.[]' > ../inv2
 export IP_MASTER=$(terraform output -json external_ip_address_vm_instance_master | jq -r '.[]')
