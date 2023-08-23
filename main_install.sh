@@ -30,12 +30,18 @@ python3.9 -m pip install --user ansible-core==2.14.6
 # Проверяем и устанавливаем дополнительные утилиты
 if ! command -v jq &> /dev/null; then
     echo "JQ не установлен. Установка..."
-    sudo apt-get install -y jq
+    sudo apt install -y jq
 fi
 if ! command -v netaddr &> /dev/null; then
     echo "netaddr не установлен. Установка..."
     sudo -H pip install -y netaddr
 fi
+if ! command -v jmespath &> /dev/null; then
+    echo "jmespath не установлен. Установка..."
+    sudo pip install jmespath
+fi
+
+
 
 # Проверяем наличие Terraform и устанавливаем его при необходимости
 if ! command -v terraform &> /dev/null; then
