@@ -1,12 +1,45 @@
 #!/bin/bash
+# Я постарался реализровать скрипт, 
+# чтобы он развертывал инфраструктуру прям с нуля, на "чистой" машине при условии что ОС Ubuntu 20.04.
 
 set -e
+
+# Скачиваем репозиторий kubespray, для дальнейшего развертывания.
+git clone  https://github.com/kubernetes-sigs/kubespray.git
+
+# Проверяем и устанавливаем python 3.9
+if ! command -v python3.9 &> /dev/null; then
+    echo "Python 3.9 не установлен. Установка..."
+    sudo apt update
+    sudo apt install -y software-properties-common
+    sudo add-apt-repository ppa:deadsnakes/ppa
+    sudo apt-get install -y python3.9
+fi
+
+# Проверяем и устанавливаем pip для python3.9 и Ansible
+if ! command -v pip3.9 &> /dev/null; then
+    echo "Pip для Python 3.9 не установлен. Установка..."
+    sudo apt-get install -y python3.9-pip
+fi
+python3.9 -m pip install --user ansible-core==2.15.0
+
+# Проверяем и устанавливаем дополнительные утилиты
+if ! command -v jq &> /dev/null; then
+    echo "JQ не установлен. Установка..."
+    sudo apt-get install -y jq
+fi
+if ! command -v netaddr &> /dev/null; then
+    echo "netaddr не установлен. Установка..."
+    sudo -H pip install -y netaddr
+fi
 
 # Проверяем наличие Terraform и устанавливаем его при необходимости
 if ! command -v terraform &> /dev/null; then
     echo "Terraform не установлен. Установка..."
     sudo snap install terraform --classic
 fi
+
+# Окружение готово, приступаем к развертыванию
 
 cd terraform
 terraform init
