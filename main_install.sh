@@ -27,7 +27,7 @@ fi
 python3.9 -m pip install --user ansible-core==2.14.6
 
 
-# Проверяем и устанавливаем дополнительные утилиты
+# Проверяем и устанавливаем дополнительные утилиты, для успешного развертывания kubespray
 if ! command -v jq &> /dev/null; then
     echo "JQ не установлен. Установка..."
     sudo apt install -y jq
@@ -40,8 +40,10 @@ if ! command -v jmespath &> /dev/null; then
     echo "jmespath не установлен. Установка..."
     sudo pip install jmespath
 fi
-
-
+if ! command -v kubectl &> /dev/null; then
+    echo "kubectl не установлена. Установка..."
+    sudo apt-get update && sudo apt-get install -y kubectl
+fi
 
 # Проверяем наличие Terraform и устанавливаем его при необходимости
 if ! command -v terraform &> /dev/null; then
@@ -49,7 +51,7 @@ if ! command -v terraform &> /dev/null; then
     sudo snap install terraform --classic
 fi
 
-# Окружение готово, приступаем к развертыванию
+echo "Окружение готово, приступаем к развертыванию"
 
 cd terraform
 terraform init
@@ -82,10 +84,6 @@ sleep 120
 #        ssh ubuntu@$worker_ip "sudo chmod +x /usr/local/bin/nerdctl"
 #    fi
 #done
-
-
-
-
 
 cd ../kubespray
 ansible-playbook -i ../kubespray/inventory/mycluster/hosts.ini ../kubespray/cluster.yml --become --ssh-common-args='-o StrictHostKeyChecking=no'
