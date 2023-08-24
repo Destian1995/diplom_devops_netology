@@ -69,6 +69,6 @@
 Создается namespace "monitoring".
 Устанавливается Prometheus с помощью Helm.
 Применяется файл конфигурации для сервиса Grafana.
-Установка Helm-чарта netology (предположительно связан с вашим приложением) в namespace "myapp".
+Установка Helm-чарта netology в namespace "myapp".
 ```
 
