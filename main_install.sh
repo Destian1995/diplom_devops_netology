@@ -24,16 +24,25 @@ if ! command -v pip3.9 &> /dev/null; then
     echo "Pip для Python 3.9 не установлен. Установка..."
     sudo apt-get install -y python3.9-pip
 fi
-python3.9 -m pip install --user ansible-core==2.15.0
+python3.9 -m pip install --user ansible-core==2.14.6
 
-# Проверяем и устанавливаем дополнительные утилиты
+
+# Проверяем и устанавливаем дополнительные утилиты, для успешного развертывания kubespray
 if ! command -v jq &> /dev/null; then
     echo "JQ не установлен. Установка..."
-    sudo apt-get install -y jq
+    sudo apt install -y jq
 fi
 if ! command -v netaddr &> /dev/null; then
     echo "netaddr не установлен. Установка..."
     sudo -H pip install -y netaddr
+fi
+if ! command -v jmespath &> /dev/null; then
+    echo "jmespath не установлен. Установка..."
+    sudo pip install jmespath
+fi
+if ! command -v kubectl &> /dev/null; then
+    echo "kubectl не установлена. Установка..."
+    sudo apt-get update && sudo apt-get install -y kubectl
 fi
 
 # Проверяем наличие Terraform и устанавливаем его при необходимости
@@ -42,7 +51,7 @@ if ! command -v terraform &> /dev/null; then
     sudo snap install terraform --classic
 fi
 
-# Окружение готово, приступаем к развертыванию
+echo "Окружение готово, приступаем к развертыванию"
 
 cd terraform
 terraform init
@@ -61,16 +70,6 @@ export IP_MASTER=$(terraform output -json external_ip_address_vm_instance_master
 
 echo "Ждем пока инфраструктура оживет..."
 sleep 120
-
-# Установка nerdctl на мастер-ноду
-#ssh ubuntu@$IP_MASTER "sudo sh -c 'curl -L https://github.com/containerd/nerdctl/releases/latest/download/nerdctl-$(uname -s)-$(uname -m) > /usr/local/bin/nerdctl'"
-#ssh ubuntu@$IP_MASTER "sudo chmod +x /usr/local/bin/nerdctl"
-
-# Установка nerdctl на рабочие ноды
-#for worker_ip in $(terraform output -json external_ip_address_vm_instance_worker | jq -r '.[]'); do
-#    ssh ubuntu@$worker_ip "sudo sh -c 'curl -L https://github.com/containerd/nerdctl/releases/latest/download/nerdctl-$(uname -s)-$(uname -m) > /usr/local/bin/nerdctl'"
-#    ssh ubuntu@$worker_ip "sudo chmod +x /usr/local/bin/nerdctl"
-#done
 
 cd ../kubespray
 ansible-playbook -i ../kubespray/inventory/mycluster/hosts.ini ../kubespray/cluster.yml --become --ssh-common-args='-o StrictHostKeyChecking=no'
