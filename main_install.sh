@@ -97,9 +97,22 @@ fi
 set -e
 
 export KUBECONFIG=~/.kube/$WORKSPACE/config
+
+echo "Создание пространств имён"
 kubectl create namespace monitoring
 kubectl create namespace myapp
-helm install prometheus --namespace monitoring prometheus-community/kube-prometheus-stack
-kubectl apply -f ./manifests/grafana-service-nodeport.yaml
-helm install netology ./helm/myapp -n myapp
 
+echo "Установка прав доступа для конфигурации Kubernetes"
+chmod 600 /home/vagrant/.kube/$WORKSPACE/config
+
+echo "Добавление репозитория Helm для Prometheus"
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
+echo "Установка Prometheus"
+helm install prometheus --namespace monitoring prometheus-community/kube-prometheus-stack
+
+echo "Применение манифеста сервиса Grafana"
+kubectl apply -f ./manifests/grafana-service-nodeport.yaml
+
+echo "Установка Helm-чарта netology"
+helm install netology ./helm/myapp -n myapp
