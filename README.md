@@ -65,10 +65,10 @@
 * Запуск Ansible-плейбука jenkins.yml для развертывания Jenkins с использованием данных из файла inv2.
 
 * Установка Helm-чарта Prometheus и настройка Grafana:
-
-* Создается namespace "monitoring".
-* Устанавливается Prometheus с помощью Helm.
-* Применяется файл конфигурации для сервиса Grafana.
-* Установка Helm-чарта netology (предположительно связан с вашим приложением) в namespace "myapp".
-
+```
+Создается namespace "monitoring".
+Устанавливается Prometheus с помощью Helm.
+Применяется файл конфигурации для сервиса Grafana.
+Установка Helm-чарта netology (предположительно связан с вашим приложением) в namespace "myapp".
+```
 
