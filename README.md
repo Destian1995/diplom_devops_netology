@@ -15,7 +15,9 @@
 1 этап:
 <details>
 <summary>Скачивание репозитория Kubespray, если его нет.</summary>
-<p>Проверяется, есть ли директория с именем "kubespray". Если директория не найдена, скрипт клонирует репозиторий Kubespray из GitHub.</p>
+<pre>
+   Проверяется, есть ли директория с именем "kubespray". Если директория не найдена, скрипт клонирует репозиторий Kubespray из GitHub.
+<pre>
 </details>
 
 <details>
@@ -58,19 +60,28 @@
 Развертывание 4-х серверов в облаке, на каждый workspace (prod, stage): 1 Jenkins, 1 Master, 2 Worker. И подготовка окружения перед развертыванием Kubernetes-кластера.
 Workspace выбирается исходя из названий установленных в terraform конфигурации: diplom-prod, diplom-stage.
 Если указать любое другое название не меняя конфигурацию, то будут ошибки.
-
-
 <details>
-<summary>Запуск Ansible-плейбука для развертывания Kubernetes-кластера с использованием Kubespray и настроек SSH.</summary>
-</details>
+<summary>Детали развертывания<summary>
+<pre>
+Переход в директорию terraform, инициализация Terraform и запуск процесса создания инфраструктуры через terraform apply.
+Возврат в предыдущую директорию и последовательность команд для подготовки inventory файла Kubespray:
 
-<details>
-<summary>Запуск Ansible-плейбука k8s_conf.yml для конфигурирования Kubernetes с помощью данных из файла inv.</summary>
-</details>
+Удаляется старый inventory.
+Копируется пример inventory из репозитория Kubespray.
+Подготовка переменных для дальнейшего использования:
 
-<details>
-<summary>Запуск Ansible-плейбука jenkins.yml для развертывания Jenkins с использованием данных из файла inv2.</summary>
+Извлекается имя текущего workspace из Terraform.
+Генерируется файл hosts.ini с помощью generate_inventory.sh.
+Извлекаются IP-адреса виртуальных машин из вывода Terraform и сохраняются в файлах inv и inv2.
+
+Ожидание 2 минут (120 секунд) для того, чтобы инфраструктура успела инициализироваться.
+</pre>
 </details>
+* Запуск Ansible-плейбука для развертывания Kubernetes-кластера с использованием Kubespray и настроек SSH.
+* Запуск Ansible-плейбука k8s_conf.yml для конфигурирования Kubernetes с помощью данных из файла inv.
+
+
+* Запуск Ansible-плейбука jenkins.yml для развертывания Jenkins с использованием данных из файла inv2.
 
 <details>
 <summary>Установка Helm-чарта Prometheus и настройка Grafana:</summary>
