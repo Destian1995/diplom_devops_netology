@@ -90,11 +90,11 @@
 
 
 <details>
-<summary>Установка Helm-чарта Prometheus и настройка Grafana:</summary>
+<summary>Установка Helm-чарта, Prometheus и настройка Grafana:</summary>
 <pre>
 * Создается namespace "monitoring".
 * Устанавливается Prometheus с помощью Helm.
 * Применяется файл конфигурации для сервиса Grafana.
-* Установка Helm-чарта netology в namespace "myapp".
+* Установка Helm-чарта(приложения) netology в namespace "myapp".
 </pre>
 </details>
