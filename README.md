@@ -58,8 +58,11 @@
 
 2. Этап:
    
-Развертывание 4-х серверов в облаке, на каждый workspace (prod, stage): 1 Jenkins, 1 Master, 2 Worker. 
-И подготовка окружения перед развертыванием Kubernetes-кластера.
+* Развертывание 4-х серверов в облаке, на каждый workspace (prod, stage): 1 Jenkins, 1 Master, 2 Worker. 
+* Подготовка окружения перед развертыванием Kubernetes-кластера.
+* Развертывание Kubernetes-кластера
+* Развертывание Jenkins
+* Установка Helm-чарта Prometheus и настройка Grafana
 
 <details>
 <summary>Детали развертывания.</summary>
