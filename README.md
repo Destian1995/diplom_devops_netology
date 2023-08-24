@@ -88,8 +88,10 @@ Workspace выбирается исходя из названий установ
 
 <details>
 <summary>Установка Helm-чарта Prometheus и настройка Grafana:</summary>
-<p>Создается namespace "monitoring".</p>
-<p>Устанавливается Prometheus с помощью Helm.</p>
-<p>Применяется файл конфигурации для сервиса Grafana.</p>
-<p>Установка Helm-чарта netology в namespace "myapp".</p>
+<pre>
+* Создается namespace "monitoring".
+* Устанавливается Prometheus с помощью Helm.
+* Применяется файл конфигурации для сервиса Grafana.
+* Установка Helm-чарта netology в namespace "myapp".
+</pre>
 </details>
