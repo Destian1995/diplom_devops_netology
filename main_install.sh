@@ -50,7 +50,10 @@ if ! command -v terraform &> /dev/null; then
     echo "Terraform не установлен. Установка..."
     sudo snap install terraform --classic
 fi
+echo "установка Helm"
+sudo apt install helm
 
+echo "-------------------------------------------"
 echo "Окружение готово, приступаем к развертыванию"
 
 cd terraform
